@@ -73,9 +73,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.driver"
+    namespace "dev.afridi1.hstu_driver"
     defaultConfig {
-        applicationId "com.driver"
+        applicationId "dev.afridi1.hstu_driver"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

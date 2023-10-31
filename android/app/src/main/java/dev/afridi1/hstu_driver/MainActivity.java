@@ -1,4 +1,4 @@
-package com.driver;
+package dev.afridi1.hstu_driver;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

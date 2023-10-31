@@ -1,4 +1,4 @@
-package com.driver;
+package dev.afridi1.hstu_driver;
 
 import android.app.Application;
 import com.facebook.react.PackageList;
