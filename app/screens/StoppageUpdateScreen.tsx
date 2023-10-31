@@ -36,8 +36,6 @@ const StoppageUpdateScreen: React.FC<StoppageUpdateScreenProps> = ({
   const [isFinished, setIsFinished] = useState<boolean>(false);
 
   const updateStop = () => {
-    console.log(currentStopageIndex);
-    console.log(currentStopageIndex === stoppages.length - 1);
     if (currentStopageIndex === stoppages.length - 1) {
       return finishTrip();
     }
