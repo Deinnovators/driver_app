@@ -98,7 +98,7 @@ const Button: React.FC<ButtonProps> = ({
             }
           : undefined,
       ]}
-      borderRadius={borderRadius ?? 'round'}
+      borderRadius={borderRadius ?? 's'}
       overflow={overflow ?? 'hidden'}>
       <BaseComponent
         disabled={disabled}
@@ -111,7 +111,7 @@ const Button: React.FC<ButtonProps> = ({
           },
         ]}
         minWidth={150}
-        borderRadius={borderRadius ?? 'round'}
+        borderRadius={borderRadius ?? 's'}
         onPress={pressFunction}
         {...rest}>
         {loading ? (

@@ -4,7 +4,6 @@ import BaseHeader from './BaseHeader';
 import RoundedIconButton from '@app/components/button/RoundedIconButton';
 import { fp, getFontFamily } from '@app/lib/utils';
 import { FeatherGlyphs } from '@app/lib/icons/Feather';
-import Avatar, { AvatarProps } from '../Avatar';
 import Visibility from '@app/components/Visibility';
 import { FontWeight } from '@app/lib/enums';
 import {
@@ -23,7 +22,6 @@ export interface HeaderProps {
     icon: FeatherGlyphs;
     onPress: () => void;
   };
-  avatar?: Omit<AvatarProps, 'size'>;
   rightComponent?: React.ReactElement;
 }
 
@@ -32,7 +30,6 @@ const Header: React.FC<HeaderProps> = ({
   right,
   title,
   subtitle,
-  avatar,
   rightComponent,
 }) => {
   return (
@@ -40,20 +37,14 @@ const Header: React.FC<HeaderProps> = ({
       {left ? (
         <RoundedIconButton
           name={left.icon}
-          color='text'
-          backgroundColor='background'
+          color="text"
+          backgroundColor="background"
           size={headerIconSize}
           iconRatio={headerIconRatio}
           onPress={left.onPress}
         />
       ) : null}
-      <Visibility on={Boolean(avatar)} marginHorizontal='s'>
-        <Avatar size='small' {...avatar} />
-      </Visibility>
-      <Visibility
-        on={Boolean(title)}
-        flex={1}
-        marginLeft={avatar ? 'none' : 's'}>
+      <Visibility on={Boolean(title)} flex={1} marginLeft={'s'}>
         <Text
           fontSize={fp(2.4)}
           lineHeight={headerIconSize}
@@ -62,7 +53,7 @@ const Header: React.FC<HeaderProps> = ({
         </Text>
         {subtitle ? (
           <Text
-            variant='subheading'
+            variant="subheading"
             fontFamily={getFontFamily(FontWeight.Medium)}>
             {subtitle}
           </Text>
@@ -71,8 +62,8 @@ const Header: React.FC<HeaderProps> = ({
       <Visibility box={false} off={Boolean(rightComponent)} on={Boolean(right)}>
         <RoundedIconButton
           name={right?.icon ?? 'search'}
-          color='text'
-          backgroundColor='background'
+          color="text"
+          backgroundColor="background"
           size={headerIconSize}
           iconRatio={headerIconRatio}
           onPress={right?.onPress}

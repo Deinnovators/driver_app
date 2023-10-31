@@ -1,30 +1,33 @@
+import {
+  Box,
+  Button,
+  Container,
+  Spacer,
+  Text,
+  TextInput,
+} from '@app/components';
 import React from 'react';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
 
 export interface LoginScreenProps {}
 
 const LoginScreen: React.FC<LoginScreenProps> = ({}) => {
   return (
-    <View style={styles.container}>
-      <View style={styles.contentContainer}>
-        <Text>Enter your credentials</Text>
-        <View>
-          <TextInput placeholder="Email" />
-        </View>
-      </View>
-    </View>
+    <Container safeArea>
+      <Box justifyContent="center" pt={'l'} alignItems="center">
+        <Text variant="heading3">Login</Text>
+        <Text variant="caption" my="s">
+          Enter your credential
+        </Text>
+      </Box>
+      <Spacer space="large" />
+      <Box px="m">
+        <TextInput label="Email" />
+        <TextInput password label="Password" />
+        <Spacer space="large" />
+        <Button title="Login" variant="primary" />
+      </Box>
+    </Container>
   );
 };
 
 export default LoginScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 8,
-    paddingVertical: 12,
-  },
-  contentContainer: {
-    alignItems: 'center',
-  },
-});
