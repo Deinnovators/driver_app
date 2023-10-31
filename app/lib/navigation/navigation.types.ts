@@ -1,7 +1,15 @@
-export interface RootNavigationProps {}
+import { RouteProp } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
+export interface RootNavigationProps<
+  RouteName extends keyof RootNavigationRoutes,
+> {
+  navigation: NativeStackNavigationProp<RootNavigationRoutes, RouteName>;
+  route: RouteProp<RootNavigationRoutes, RouteName>;
+}
 
 export type RootNavigationRoutes = {
   Login: undefined;
-  BusSelection: undefined;
-  StoppageUpdater: {busId: string | number};
+  BusSelect: undefined;
+  StoppageUpdater: { schedule: any };
 };

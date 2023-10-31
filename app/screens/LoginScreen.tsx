@@ -6,11 +6,12 @@ import {
   Text,
   TextInput,
 } from '@app/components';
+import { RootNavigationProps } from '@app/lib/navigation/navigation.types';
 import React from 'react';
 
-export interface LoginScreenProps {}
+export interface LoginScreenProps extends RootNavigationProps<'Login'> {}
 
-const LoginScreen: React.FC<LoginScreenProps> = ({}) => {
+const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   return (
     <Container safeArea>
       <Box justifyContent="center" pt={'l'} alignItems="center">
@@ -24,7 +25,11 @@ const LoginScreen: React.FC<LoginScreenProps> = ({}) => {
         <TextInput label="Email" />
         <TextInput password label="Password" />
         <Spacer space="large" />
-        <Button title="Login" variant="primary" />
+        <Button
+          onPress={() => navigation.navigate('BusSelect')}
+          title="Login"
+          variant="primary"
+        />
       </Box>
     </Container>
   );
