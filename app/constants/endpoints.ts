@@ -28,6 +28,7 @@ export const endpoints = {
     ongoing: TRANSPORTS + '/ongoing-upcoming',
     trips: TRANSPORTS + '/trips',
     schedules: TRANSPORTS + '/schedules',
+    nextSchedules: TRANSPORTS + '/next-schedules',
   },
 };
 

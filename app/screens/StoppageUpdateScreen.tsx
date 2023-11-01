@@ -11,6 +11,7 @@ import { IconFamily } from '@app/lib/enums';
 import Icon from '@app/lib/icons';
 import { RootNavigationProps } from '@app/lib/navigation/navigation.types';
 import { screenHeight, screenWidth } from '@app/lib/utils';
+import { getSpaceSeperatedName } from '@app/lib/utils/string.utils';
 import { socket } from '@app/services';
 import React, { useEffect, useState } from 'react';
 import { FlatList, Image, Modal, StyleSheet } from 'react-native';
@@ -18,26 +19,17 @@ import { FlatList, Image, Modal, StyleSheet } from 'react-native';
 export interface StoppageUpdateScreenProps
   extends RootNavigationProps<'StoppageUpdater'> {}
 
-const stoppages = [
-  'Campus',
-  'College Mor',
-  'Terminal',
-  'Moharaja Mor',
-  'Shahi Masjid Mor',
-  'Shahid Minar Mor',
-  'Hospital Mor',
-  'Boro Math',
-];
-
 const StoppageUpdateScreen: React.FC<StoppageUpdateScreenProps> = ({
   navigation,
+  route,
 }) => {
+  const schedule = route.params.schedule;
   const [isStarted, setIsStarted] = useState<boolean>(false);
   const [currentStopageIndex, setCurrentStopageIndex] = useState<number>(0);
   const [isFinished, setIsFinished] = useState<boolean>(false);
 
   const updateStop = () => {
-    if (currentStopageIndex === stoppages.length - 1) {
+    if (currentStopageIndex === schedule.stoppages.length - 1) {
       return finishTrip();
     }
     setCurrentStopageIndex(prev => prev + 1);
@@ -82,7 +74,7 @@ const StoppageUpdateScreen: React.FC<StoppageUpdateScreenProps> = ({
       }}>
       <Box padding="m">
         <FlatList
-          data={stoppages}
+          data={schedule.stoppages}
           keyExtractor={item => item}
           renderItem={({ item, index }) => {
             const bgColor =
@@ -100,7 +92,7 @@ const StoppageUpdateScreen: React.FC<StoppageUpdateScreenProps> = ({
                   flexDirection="row"
                   justifyContent="space-between"
                   alignItems="center">
-                  <Text color={textColor}>{item}</Text>
+                  <Text color={textColor}>{getSpaceSeperatedName(item)}</Text>
                   <Visibility on={showTick}>
                     <Icon family={IconFamily.Feather} name="check" size={20} />
                   </Visibility>
@@ -115,7 +107,7 @@ const StoppageUpdateScreen: React.FC<StoppageUpdateScreenProps> = ({
           variant="primary"
           onPress={updateTrip}
           title={
-            currentStopageIndex === stoppages.length - 1
+            currentStopageIndex === schedule.stoppages.length - 1
               ? 'Finish trip'
               : isStarted
               ? 'Next stop'

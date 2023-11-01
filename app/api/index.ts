@@ -26,8 +26,9 @@ class ApiService {
 
   requestInterceptor(config: InternalAxiosRequestConfig) {
     const auth = useAuthStore.getState();
+
     if (auth.token) {
-      config.headers.Authorization = 'Bearer' + 'auth.token';
+      config.headers.Authorization = 'Bearer ' + auth.token;
     }
     return config;
   }

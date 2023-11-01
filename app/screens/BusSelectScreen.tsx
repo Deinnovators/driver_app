@@ -1,60 +1,116 @@
-import { Box, Card, Container, Spacer, Text, TouchBox } from '@app/components';
+import { api } from '@app/api';
+import {
+  Box,
+  Button,
+  Card,
+  Container,
+  Spacer,
+  Text,
+  TouchBox,
+} from '@app/components';
 import { RootNavigationProps } from '@app/lib/navigation/navigation.types';
-import React from 'react';
-import { FlatList } from 'react-native';
+import {
+  getAndSeperatedName,
+  getSpaceSeperatedName,
+} from '@app/lib/utils/string.utils';
+import { useAuthStore } from '@app/zustores';
+import dayjs from 'dayjs';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, FlatList } from 'react-native';
 
 export interface BusSelectScreenProps
   extends RootNavigationProps<'BusSelect'> {}
 
+const Logout = () => {
+  const { logout } = useAuthStore();
+  return (
+    <Box my="m">
+      <Button onPress={logout} title="Logout" variant="primary" />
+    </Box>
+  );
+};
+
 const BusSelectScreen: React.FC<BusSelectScreenProps> = ({ navigation }) => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [schedules, setSchedules] = useState<any[]>([]);
+
+  useEffect(() => {
+    setLoading(true);
+    api.transports
+      .getAllSchedules()
+      .then(res => {
+        console.log(res[0]);
+        setSchedules(res);
+        setLoading(false);
+      })
+      .catch(e => {
+        console.log(e);
+        setLoading(false);
+      });
+  }, []);
+
   return (
     <Container safeArea headerShown headerProps={{ title: 'Select Bus' }}>
       <Text variant="caption" mx="m">
         Select a bus according to your schedule
       </Text>
-      <Box padding="m" mb="xl">
-        <FlatList
-          data={Array(8).fill(0)}
-          keyExtractor={(_, index) => index.toString()}
-          renderItem={({ index }) => {
-            return (
-              <TouchBox
-                onPress={() =>
-                  navigation.navigate('StoppageUpdater', { schedule: index })
-                }>
-                <Card>
-                  <Box
-                    flexDirection="row"
-                    justifyContent="space-between"
-                    alignItems="center">
-                    <Box borderWidth={1} p="s" borderRadius="s">
-                      <Text variant="heading2">
-                        {index + 1}:30 <Text variant="caption">pm</Text>
-                      </Text>
-                    </Box>
-                    <Box>
-                      <Text variant="comment">From: Campus</Text>
-                      <Text variant="comment">Trip: Students</Text>
-                      <Text variant="comment">General</Text>
-                    </Box>
+      {loading ? (
+        <Box flex={1} justifyContent="center" alignItems="center">
+          <ActivityIndicator />
+        </Box>
+      ) : (
+        <Box padding="m" mb="xl">
+          <FlatList
+            data={schedules}
+            keyExtractor={(_, index) => index.toString()}
+            showsVerticalScrollIndicator={false}
+            renderItem={({ item }) => {
+              return (
+                <TouchBox
+                  onPress={() =>
+                    navigation.navigate('StoppageUpdater', { schedule: item })
+                  }>
+                  <Card>
                     <Box
-                      borderWidth={1}
-                      p="s"
-                      height={45}
-                      width={45}
-                      justifyContent="center"
-                      alignItems="center"
-                      borderRadius="round">
-                      <Text variant="heading2">{index + 1}</Text>
+                      flexDirection="row"
+                      justifyContent="space-between"
+                      alignItems="center">
+                      <Box borderWidth={1} p="s" borderRadius="s" width={115}>
+                        <Text variant="heading3" textAlign="center">
+                          {dayjs(item.time).format('HH:mma')}
+                        </Text>
+                      </Box>
+                      <Box flex={1} ml="l">
+                        <Text variant="comment">
+                          From: {getSpaceSeperatedName(item.stoppages[0])}
+                        </Text>
+                        <Text variant="comment">
+                          Trip: {getAndSeperatedName(item.tripName)}
+                        </Text>
+                        <Text variant="comment">{item.tripKind}</Text>
+                      </Box>
+                      <Box
+                        borderWidth={1}
+                        p="s"
+                        height={45}
+                        width={45}
+                        justifyContent="center"
+                        alignItems="center"
+                        borderRadius="round">
+                        <Text variant="heading2">
+                          {item.transport.busNumber}
+                        </Text>
+                      </Box>
                     </Box>
-                  </Box>
-                </Card>
-              </TouchBox>
-            );
-          }}
-          ItemSeparatorComponent={Spacer}
-        />
-      </Box>
+                  </Card>
+                </TouchBox>
+              );
+            }}
+            ItemSeparatorComponent={Spacer}
+            ListFooterComponent={Logout}
+          />
+        </Box>
+      )}
     </Container>
   );
 };

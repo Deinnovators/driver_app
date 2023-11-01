@@ -35,11 +35,16 @@ export class TransportsApi extends HTTPService {
     });
     return res.data;
   }
+  async getNextSchedules(): Promise<any[]> {
+    const res = await this.get({
+      endpoint: this.endpoints.transports.nextSchedules,
+    });
+    return res.data;
+  }
 
-  async getAllSchedules(config?: AxiosRequestConfig): Promise<any[]> {
+  async getAllSchedules(): Promise<any[]> {
     const res = await this.get({
       endpoint: this.endpoints.transports.schedules,
-      config,
     });
     return res.data;
   }

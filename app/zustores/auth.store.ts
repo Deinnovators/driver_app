@@ -25,7 +25,7 @@ const useAuthStore = create<AuthState>()(
           index: 0,
           routes: [
             {
-              name: 'Authentication',
+              name: 'Login',
             },
           ],
         });

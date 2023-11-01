@@ -4,6 +4,7 @@ import { RootNavigationRoutes } from './navigation.types';
 import {
   BusSelectScreen,
   LoginScreen,
+  StartupScreen,
   StoppageUpdateScreen,
 } from '../../screens';
 import { nativeStackOptions } from './navigation.options';
@@ -20,8 +21,9 @@ const { Navigator, Screen } =
 
 const RootNavigation: React.FC = ({}) => {
   return (
-    <NavigationContainer>
-      <Navigator screenOptions={nativeStackOptions}>
+    <NavigationContainer ref={rootNavigationRef}>
+      <Navigator initialRouteName="Startup" screenOptions={nativeStackOptions}>
+        <Screen name="Startup" component={StartupScreen} />
         <Screen name="Login" component={LoginScreen} />
         <Screen name="BusSelect" component={BusSelectScreen} />
         <Screen name="StoppageUpdater" component={StoppageUpdateScreen} />
