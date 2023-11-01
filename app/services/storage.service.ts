@@ -1,5 +1,4 @@
 import { MMKV } from 'react-native-mmkv';
-import { initializeMMKVFlipper } from 'react-native-mmkv-flipper-plugin';
 
 type KeyValueTuple<T> = [key: string, value: T];
 /**
@@ -9,9 +8,6 @@ class _StorageService {
   private storage: MMKV;
   constructor() {
     this.storage = new MMKV({ id: 'sista-app' });
-    if (__DEV__) {
-      initializeMMKVFlipper({ 'sista-app': this.storage });
-    }
   }
 
   /**

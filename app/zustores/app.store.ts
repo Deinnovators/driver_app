@@ -1,6 +1,6 @@
 import { ThemeMode } from '@app/lib/types/string.types';
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 import { StorageKey } from '@app/lib/types/storage.types';
 import zuStorage from '@app/zustores/zustorage';
 
@@ -20,7 +20,7 @@ const useAppStore = create<AppState>()(
     }),
     {
       name: StorageKey.appStore,
-      getStorage: () => zuStorage,
+      storage: createJSONStorage(() => zuStorage),
     },
   ),
 );

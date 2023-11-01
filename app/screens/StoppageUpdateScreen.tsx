@@ -11,7 +11,8 @@ import { IconFamily } from '@app/lib/enums';
 import Icon from '@app/lib/icons';
 import { RootNavigationProps } from '@app/lib/navigation/navigation.types';
 import { screenHeight, screenWidth } from '@app/lib/utils';
-import React, { useState } from 'react';
+import { socket } from '@app/services';
+import React, { useEffect, useState } from 'react';
 import { FlatList, Image, Modal, StyleSheet } from 'react-native';
 
 export interface StoppageUpdateScreenProps
@@ -61,6 +62,12 @@ const StoppageUpdateScreen: React.FC<StoppageUpdateScreenProps> = ({
       updateStop();
     }
   };
+
+  useEffect(() => {
+    socket.init();
+
+    return socket.destroy;
+  }, []);
 
   return (
     <Container

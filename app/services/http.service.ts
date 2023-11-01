@@ -14,7 +14,7 @@ export interface PostRequest<T> {
 abstract class HTTPService {
   private _instance: AxiosInstance;
 
-  constructor(instance: AxiosInstance) {
+  constructor(readonly instance: AxiosInstance) {
     this._instance = instance;
   }
 
@@ -26,14 +26,6 @@ abstract class HTTPService {
   }
 
   protected async post<T = any, R = any>({
-    endpoint,
-    data,
-    config,
-  }: PostRequest<T>): Promise<AxiosResponse<R>> {
-    return this._instance.post(endpoint, { data }, config);
-  }
-
-  protected async authPost<T = any, R = any>({
     endpoint,
     data,
     config,
@@ -53,7 +45,7 @@ abstract class HTTPService {
     data,
     config,
   }: PostRequest<T>): Promise<AxiosResponse<R>> {
-    return this._instance.put(endpoint, { data }, config);
+    return this._instance.put(endpoint, data, config);
   }
 
   protected async patch<T = any, R = any>({
@@ -61,22 +53,7 @@ abstract class HTTPService {
     data,
     config,
   }: PostRequest<T>): Promise<AxiosResponse<R>> {
-    return this._instance.patch(endpoint, { data }, config);
-  }
-
-  protected async uploadPost<T = any, R = any>({
-    endpoint,
-    data,
-    config,
-  }: PostRequest<T>): Promise<AxiosResponse<R>> {
-    return this._instance.post(endpoint, data, config);
-  }
-  protected async userPut<T = any, R = any>({
-    endpoint,
-    data,
-    config,
-  }: PostRequest<T>): Promise<AxiosResponse<R>> {
-    return this._instance.put(endpoint, data, config);
+    return this._instance.patch(endpoint, data, config);
   }
 }
 
