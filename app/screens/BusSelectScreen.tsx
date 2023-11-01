@@ -13,6 +13,7 @@ import {
   getAndSeperatedName,
   getSpaceSeperatedName,
 } from '@app/lib/utils/string.utils';
+import { geo } from '@app/services';
 import { useAuthStore } from '@app/zustores';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
@@ -35,11 +36,11 @@ const BusSelectScreen: React.FC<BusSelectScreenProps> = ({ navigation }) => {
   const [schedules, setSchedules] = useState<any[]>([]);
 
   useEffect(() => {
+    geo.requestPermission();
     setLoading(true);
     api.transports
       .getAllSchedules()
       .then(res => {
-        console.log(res[0]);
         setSchedules(res);
         setLoading(false);
       })

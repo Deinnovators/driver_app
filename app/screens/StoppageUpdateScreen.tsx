@@ -1,3 +1,4 @@
+import { api } from '@app/api';
 import {
   Box,
   Button,
@@ -12,10 +13,20 @@ import Icon from '@app/lib/icons';
 import { RootNavigationProps } from '@app/lib/navigation/navigation.types';
 import { screenHeight, screenWidth } from '@app/lib/utils';
 import { getSpaceSeperatedName } from '@app/lib/utils/string.utils';
-import { socket } from '@app/services';
+import { geo, socket } from '@app/services';
 import React, { useEffect, useState } from 'react';
 import { FlatList, Image, Modal, StyleSheet } from 'react-native';
+import { GeoPosition } from 'react-native-geolocation-service';
 
+const getLocation = async () => {
+  try {
+    const location = await geo.getCurrentPosition();
+    return location;
+  } catch (error) {
+    console.log('geo: ', error);
+    return undefined;
+  }
+};
 export interface StoppageUpdateScreenProps
   extends RootNavigationProps<'StoppageUpdater'> {}
 
@@ -27,24 +38,76 @@ const StoppageUpdateScreen: React.FC<StoppageUpdateScreenProps> = ({
   const [isStarted, setIsStarted] = useState<boolean>(false);
   const [currentStopageIndex, setCurrentStopageIndex] = useState<number>(0);
   const [isFinished, setIsFinished] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [trip, setTrip] = useState<any>(false);
 
-  const updateStop = () => {
+  const updateStop = async () => {
     if (currentStopageIndex === schedule.stoppages.length - 1) {
       return finishTrip();
     }
-    setCurrentStopageIndex(prev => prev + 1);
+    try {
+      setLoading(true);
+      const nextStopIndex = currentStopageIndex + 1;
+
+      const location: GeoPosition | undefined = await getLocation();
+
+      const data: any = {
+        nextStop: schedule.stoppages[nextStopIndex],
+        prevLeftAt: new Date().toISOString(),
+      };
+      if (location?.coords) {
+        data.currentLat = location.coords.latitude;
+        data.currentLng = location.coords.longitude;
+      }
+      await api.transports.updateTrip(trip.id, data);
+      setLoading(false);
+      setCurrentStopageIndex(prev => prev + 1);
+    } catch (error) {
+      setLoading(false);
+    }
   };
 
-  const startTrip = () => {
-    setIsStarted(true);
+  const startTrip = async () => {
+    try {
+      setLoading(true);
+      const location: GeoPosition | undefined = await getLocation();
+      const data: any = {
+        nextStop: schedule.stoppages[1],
+        prevLeftAt: new Date().toISOString(),
+        scheduleId: schedule.id,
+      };
+
+      if (location?.coords) {
+        data.currentLat = location.coords.latitude;
+        data.currentLng = location.coords.longitude;
+      }
+
+      const t = await api.transports.createTrip(data);
+
+      setTrip(t);
+
+      setIsStarted(true);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
   };
 
-  const finishTrip = () => {
-    setIsFinished(true);
-    setTimeout(() => {
-      setIsFinished(false);
-      navigation.goBack();
-    }, 1500);
+  const finishTrip = async () => {
+    try {
+      setLoading(true);
+      await api.transports.finishTrip(trip.id, trip);
+      setLoading(false);
+      setIsFinished(true);
+      setTimeout(() => {
+        setIsFinished(false);
+        navigation.goBack();
+      }, 1500);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
   };
 
   const updateTrip = () => {
@@ -106,6 +169,7 @@ const StoppageUpdateScreen: React.FC<StoppageUpdateScreenProps> = ({
         <Button
           variant="primary"
           onPress={updateTrip}
+          loading={loading}
           title={
             currentStopageIndex === schedule.stoppages.length - 1
               ? 'Finish trip'

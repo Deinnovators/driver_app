@@ -1,5 +1,5 @@
-import { AxiosInstance, AxiosRequestConfig } from 'axios';
-import { HTTPService } from '@app/services';
+import { AxiosInstance } from 'axios';
+import { HTTPService, socket } from '@app/services';
 import { Endpoints } from '@app/constants/endpoints';
 
 export class TransportsApi extends HTTPService {
@@ -10,31 +10,6 @@ export class TransportsApi extends HTTPService {
     this.endpoints = ep;
   }
 
-  async getDrivers(config?: AxiosRequestConfig): Promise<any[]> {
-    const res = await this.get({
-      endpoint: this.endpoints.transports.drivers,
-      config,
-    });
-    return res.data;
-  }
-  async getOngoingUpcoming(config?: AxiosRequestConfig): Promise<{
-    ongoing: any[];
-    upcoming: any[];
-  }> {
-    const res = await this.get({
-      endpoint: this.endpoints.transports.ongoing,
-      config,
-    });
-    return res.data;
-  }
-
-  async getOngoingTrips(config?: AxiosRequestConfig): Promise<any[]> {
-    const res = await this.get({
-      endpoint: this.endpoints.transports.trips,
-      config,
-    });
-    return res.data;
-  }
   async getNextSchedules(): Promise<any[]> {
     const res = await this.get({
       endpoint: this.endpoints.transports.nextSchedules,
@@ -47,5 +22,29 @@ export class TransportsApi extends HTTPService {
       endpoint: this.endpoints.transports.schedules,
     });
     return res.data;
+  }
+
+  async createTrip(data: any): Promise<any[]> {
+    const res = await this.post({
+      endpoint: this.endpoints.transports.trips,
+      data,
+    });
+    socket.startTrip(res.data);
+    return res.data;
+  }
+  async updateTrip(id: number, data: any): Promise<any[]> {
+    const res = await this.patch({
+      endpoint: this.endpoints.transports.trips + '/' + id,
+      data,
+    });
+    socket.updateTrip(res.data);
+    return res.data;
+  }
+
+  async finishTrip(id: number, trip: any): Promise<void> {
+    await this.delete({
+      endpoint: this.endpoints.transports.trips + '/' + id,
+    });
+    socket.finishTrip(trip);
   }
 }

@@ -1,4 +1,5 @@
 import { socketURL } from '@app/config';
+import { TransportsEvents } from '@app/constants/events';
 import { io as sIO, Socket } from 'socket.io-client';
 
 class SocketService {
@@ -15,6 +16,17 @@ class SocketService {
     this.io.on('start_trip', d => {
       console.log(d);
     });
+  }
+
+  startTrip(trip: any) {
+    this.io?.emit(TransportsEvents.start, trip);
+  }
+  updateTrip(trip: any) {
+    this.io?.emit(TransportsEvents.update, trip);
+  }
+
+  finishTrip(trip: any) {
+    this.io?.emit(TransportsEvents.finish, trip);
   }
 
   destroy() {
