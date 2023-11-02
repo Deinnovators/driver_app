@@ -78,7 +78,7 @@ const BusSelectScreen: React.FC<BusSelectScreenProps> = ({ navigation }) => {
                       alignItems="center">
                       <Box borderWidth={1} p="s" borderRadius="s" width={115}>
                         <Text variant="heading3" textAlign="center">
-                          {dayjs(item.time).format('HH:mma')}
+                          {dayjs(item.time).format('hh:mma')}
                         </Text>
                       </Box>
                       <Box flex={1} ml="l">
