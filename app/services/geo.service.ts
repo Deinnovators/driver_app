@@ -1,5 +1,5 @@
 import { PermissionsAndroid, Platform } from 'react-native';
-import Geo from 'react-native-geolocation-service';
+import Geo, { GeoError, GeoPosition } from 'react-native-geolocation-service';
 
 class _GeoService {
   async requestPermission() {
@@ -32,6 +32,23 @@ class _GeoService {
         },
       );
     });
+  }
+
+  addListener(
+    listener: (pos: GeoPosition) => void,
+    onError: (err: GeoError) => void = () => {},
+  ) {
+    const id = Geo.watchPosition(listener, onError, {
+      enableHighAccuracy: true,
+      distanceFilter: 200,
+      interval: 30 * 1000,
+      fastestInterval: 10000,
+      showLocationDialog: true,
+      forceRequestLocation: true,
+    });
+    return () => {
+      Geo.clearWatch(id);
+    };
   }
 }
 

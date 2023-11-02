@@ -118,10 +118,26 @@ const StoppageUpdateScreen: React.FC<StoppageUpdateScreenProps> = ({
     }
   };
 
+  const updateLocation = (pos: GeoPosition) => {
+    if (!trip?.id) {
+      return;
+    }
+    const data = {
+      currentLat: pos.coords.latitude,
+      currentLng: pos.coords.longitude,
+    };
+    api.transports.updateTrip(trip.id, data);
+  };
+
   useEffect(() => {
     socket.init();
+    const remove = geo.addListener(updateLocation);
 
-    return socket.destroy;
+    return () => {
+      socket.destroy();
+      remove();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

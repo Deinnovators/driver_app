@@ -13,9 +13,6 @@ class SocketService {
       reconnectionDelay: 1000,
       transports: ['websocket'],
     });
-    this.io.on('start_trip', d => {
-      console.log(d);
-    });
   }
 
   startTrip(trip: any) {
