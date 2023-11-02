@@ -157,7 +157,12 @@ const StoppageUpdateScreen: React.FC<StoppageUpdateScreenProps> = ({
                   alignItems="center">
                   <Text color={textColor}>{getSpaceSeperatedName(item)}</Text>
                   <Visibility on={showTick}>
-                    <Icon family={IconFamily.Feather} name="check" size={20} />
+                    <Icon
+                      family={IconFamily.Feather}
+                      color="gray"
+                      name="check"
+                      size={20}
+                    />
                   </Visibility>
                 </Box>
               </Card>
